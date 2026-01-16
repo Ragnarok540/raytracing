@@ -13,15 +13,14 @@ typedef struct {
     float e2;
 } Vec3;
 
-typedef Vec3 Point3;
-
+Vec3 vec3(float x, float y, float z);
 float vec3_x(Vec3 v);
 float vec3_y(Vec3 v);
 float vec3_z(Vec3 v);
 float vec3_elem(Vec3 v, int index);
 Vec3 vec3_neg(Vec3 v);
 Vec3 vec3_sum(Vec3 u, Vec3 v);
-Vec3 vec3_diff(Vec3 v0, Vec3 v1);
+Vec3 vec3_diff(Vec3 u, Vec3 v);
 Vec3 vec3_mult(Vec3 v, float t);
 Vec3 vec3_div(Vec3 v, float t);
 Vec3 vec3_prod(Vec3 u, Vec3 v);
@@ -38,15 +37,39 @@ Vec3 vec3_unit(Vec3 v);
 
 typedef Vec3 Color;
 
+Color color(float r, float g, float b);
 void color_write(Color pixel_color);
 
 // Color end
+
+// Ray start
+
+typedef Vec3 Point3;
+
+typedef struct {
+    Point3 origin;
+    Vec3 direction;
+} Ray;
+
+Point3 point3(float x, float y, float z);
+Point3 ray_at(Ray r, float t);
+
+// Ray end
 
 #endif // RT_H_
 
 #ifdef RT_IMPLEMENTATION
 
 // Vec3 start
+
+Vec3 vec3(float x, float y, float z) {
+    Vec3 o = {
+        .e0 = x,
+        .e1 = y,
+        .e2 = z,
+    };
+    return o;
+}
 
 float vec3_x(Vec3 v) {
     return v.e0;
@@ -156,6 +179,15 @@ Vec3 vec3_unit(Vec3 v) {
 
 // Color start
 
+Color color(float r, float g, float b) {
+    Color o = {
+        .e0 = r,
+        .e1 = g,
+        .e2 = b,
+    };
+    return o;
+}
+
 void color_write(Color pixel_color) {
     float r = vec3_x(pixel_color);
     float g = vec3_y(pixel_color);
@@ -166,9 +198,25 @@ void color_write(Color pixel_color) {
     int ib = (int) 255.999 * b;
 
     printf("%i %i %i\n", ir, ig, ib);
-
 }
 
 // Color end
+
+// Ray start
+
+Point3 point3(float x, float y, float z) {
+    Point3 o = {
+        .e0 = x,
+        .e1 = y,
+        .e2 = z,
+    };
+    return o;
+}
+
+Point3 ray_at(Ray r, float t) {
+    return vec3_sum(r.origin, vec3_mult(r.direction, t));
+}
+
+// Ray end
 
 #endif // RT_IMPLEMENTATION
