@@ -1,4 +1,5 @@
-#include <stdio.h>
+#define RT_IMPLEMENTATION
+#include "rt.h"
 
 int main(void) {
     int image_width = 256;
@@ -8,15 +9,13 @@ int main(void) {
 
     for (int j = 0; j < image_height; j++) {
         for (int i = 0; i < image_width; i++) {
-            float r = (float) i / (image_width - 1);
-            float g = (float) j / (image_height - 1);
-            float b = 0.0;
+            Color pixel_color = {
+                .e0 = (float) i / (image_width - 1),
+                .e1 = (float) j / (image_height - 1),
+                .e2 = 0.0,
+            };
 
-            int ir = (int) 255.999 * r;
-            int ig = (int) 255.999 * g;
-            int ib = (int) 255.999 * b;
-
-            printf("%i %i %i\n", ir, ig, ib);
+            color_write(pixel_color);
         }
     }
 
