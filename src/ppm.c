@@ -10,12 +10,12 @@ int main(void) {
     for (int j = 0; j < image_height; j++) {
         for (int i = 0; i < image_width; i++) {
             Color pixel_color = {
-                .e0 = (float) i / (image_width - 1),
-                .e1 = (float) j / (image_height - 1),
-                .e2 = 0.0,
+                .x = (float) i / (image_width - 1),
+                .y = (float) j / (image_height - 1),
+                .z = 0.0,
             };
 
-            color_write(pixel_color);
+            color_write(&pixel_color);
         }
     }
 
