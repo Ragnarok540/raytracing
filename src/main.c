@@ -4,15 +4,16 @@
 #include <stdbool.h>
 
 float hit_sphere(Point3 *center, float radius, Ray *r) {
-    Vec3 oc = vec3_diff(r->origin, *center);
-    float a = vec3_dot(r->direction, r->direction);
-    float b = vec3_dot(r->direction, oc);
-    float c = vec3_dot(oc, oc) - radius * radius;
-    float discriminant = b * b - a * c;
+    Vec3 oc = vec3_diff(*center, r->origin);
+    float a = vec3_len_sq(r->direction);
+    float h = vec3_dot(r->direction, oc);
+    float c = vec3_len_sq(oc) - radius * radius;
+    float discriminant = h * h - a * c;
+
     if (discriminant < 0) {
         return -1.0;
     } else {
-        return (-b - sqrt(discriminant)) / a;
+        return (h - sqrt(discriminant)) / a;
     }
 }
 
