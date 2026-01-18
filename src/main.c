@@ -3,24 +3,31 @@
 
 #include <stdbool.h>
 
-bool hit_sphere(Point3 *center, float radius, Ray *r) {
+float hit_sphere(Point3 *center, float radius, Ray *r) {
     Vec3 oc = vec3_diff(r->origin, *center);
     float a = vec3_dot(r->direction, r->direction);
     float b = vec3_dot(r->direction, oc);
     float c = vec3_dot(oc, oc) - radius * radius;
     float discriminant = b * b - a * c;
-    return discriminant >= 0;
+    if (discriminant < 0) {
+        return -1.0;
+    } else {
+        return (-b - sqrt(discriminant)) / a;
+    }
 }
 
 Color ray_color(Ray *r) {
     Point3 sphere_center = point3(0, 0, -1);
-    if (hit_sphere(&sphere_center, 0.5, r)) {
-        return color(1, 0, 0);
+    float t =  hit_sphere(&sphere_center, 0.5, r);
+    
+    if (t > 0) {
+        Vec3 n = vec3_unit(vec3_diff(ray_at(*r, t), vec3(0, 0, -1)));
+        return vec3_mult(color(n.x + 1, n.y + 1, n.z +1 ), 0.5);
     }
 
     Vec3 unit_direction = vec3_unit(r->direction);
-    float t = 0.5 * (unit_direction.y + 1.0);
-    return vec3_lerp(vec3(1, 1, 1), vec3(0.5, 0.7, 1), t);
+    t = 0.5 * (unit_direction.y + 1.0);
+    return vec3_lerp(color(1.0, 1.0, 1.0), color(0.5, 0.7, 1.0), t);
 }
 
 int main(void) {
